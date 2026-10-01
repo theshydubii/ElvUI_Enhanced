@@ -180,6 +180,16 @@ P.enhanced = {
 		}
 	},
 	unitframe = {
+		portraitOverlay = {
+			player = {
+				higherPortrait = false,
+				portraitAlpha = 0.35
+			},
+			target = {
+				higherPortrait = false,
+				portraitAlpha = 0.35
+			}
+		},
 		portraitHDModelFix = {
 			enable = false,
 			debug = false,

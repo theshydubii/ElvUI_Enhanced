@@ -30489,6 +30489,7 @@ globals = {
 	"tomtest",
 
 	-- functions: Blizzard_AchievementUI
+	"ACHIEVEMENT_COMPARISON_SUMMARY_ID",
 	"ACHIEVEMENTUI_SELECTEDFILTER",
 	"AchievementButton_Collapse",
 	"AchievementButton_Desaturate",

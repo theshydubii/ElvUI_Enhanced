@@ -12,10 +12,13 @@ local GetInboxNumItems = GetInboxNumItems
 local InboxItemCanDelete = InboxItemCanDelete
 local IsShiftKeyDown = IsShiftKeyDown
 local TakeInboxMoney = TakeInboxMoney
+local GetMoney = GetMoney
+local GetTime = GetTime
 
 local ERR_INV_FULL = ERR_INV_FULL
 
 local MAIL_MIN_DELAY = 0.15
+local MAIL_CONFIRM_TIMEOUT = 1.5
 
 function TAM:GetTotalCash()
 	if GetInboxNumItems() == 0 then return 0 end
@@ -52,9 +55,16 @@ function TAM:Reset()
 	self.commandPending = nil
 
 	self.collectCashOnly = nil
-	self.collectedCash = 0
 	self.collectedTotal = 0
 	self.removeEmpty = nil
+	self.awaitingUpdate = nil
+	self.awaitStartTime = nil
+	self.startMoney = nil
+end
+
+function TAM:WaitForInboxUpdate()
+	self.awaitingUpdate = true
+	self.awaitStartTime = nil
 end
 
 function TAM:StartOpening(mode)
@@ -75,6 +85,7 @@ function TAM:StartOpening(mode)
 	end
 
 	self.processing = true
+	self.startMoney = GetMoney()
 
 	self.numToOpen = GetInboxNumItems()
 	self.takeAll:SetScript("OnUpdate", function(_, elapsed) self:OnUpdate(elapsed) end)
@@ -89,8 +100,9 @@ function TAM:StartOpening(mode)
 end
 
 function TAM:StopOpening(err)
-	if self.collectedCash > 0 then
-		E:Print(L["Collected "]..E:FormatMoney(self.collectedCash))
+	local collectedCash = GetMoney() - (self.startMoney or GetMoney())
+	if collectedCash > 0 then
+		E:Print(L["Collected "]..E:FormatMoney(collectedCash))
 	end
 	if self.collectedTotal > 0 and not err then
 		E:Print(L["Collection completed."])
@@ -146,13 +158,14 @@ function TAM:ProcessNextMail()
 	if money > 0 then
 		TakeInboxMoney(self.mailIndex)
 
-		self.collectedCash = self.collectedCash + money
 		self.collectedTotal = self.collectedTotal + 1
+		self:WaitForInboxUpdate()
 		self.timeUntilNextRetrieval = MAIL_MIN_DELAY
 	elseif not self.collectCashOnly and (itemCount and itemCount > 0) then
 		AutoLootMailItem(self.mailIndex)
 
 		self.collectedTotal = self.collectedTotal + 1
+		self:WaitForInboxUpdate()
 		self.timeUntilNextRetrieval = MAIL_MIN_DELAY
 	else
 		self:AdvanceAndProcessNextMail()
@@ -171,6 +184,7 @@ function TAM:RemoveNextMail()
 			if not isGM and (not CODAmount or CODAmount == 0) and money == 0 and (not itemCount or itemCount == 0) then
 				if InboxItemCanDelete(i) then
 					DeleteInboxItem(i)
+					self:WaitForInboxUpdate()
 					self.timeUntilNextRetrieval = MAIL_MIN_DELAY
 					break
 				end
@@ -191,6 +205,18 @@ function TAM:OnUpdate(dt)
 	self.timeUntilNextRetrieval = self.timeUntilNextRetrieval - dt
 
 	if self.timeUntilNextRetrieval <= 0 then
+		if self.awaitingUpdate then
+			if not self.awaitStartTime then
+				self.awaitStartTime = GetTime()
+			elseif GetTime() - self.awaitStartTime > MAIL_CONFIRM_TIMEOUT then
+				self.awaitingUpdate = nil
+				self.awaitStartTime = nil
+			else
+				self.timeUntilNextRetrieval = MAIL_MIN_DELAY
+				return
+			end
+		end
+
 		if not self.commandPending then
 			self.timeUntilNextRetrieval = nil
 			if not self.removeEmpty then
@@ -221,6 +247,9 @@ function TAM:OnEvent(event, errstr)
 
 		self:StopOpening(true)
 	elseif event == "MAIL_INBOX_UPDATE" then
+		self.awaitingUpdate = nil
+		self.awaitStartTime = nil
+
 		if self.numToOpen ~= GetInboxNumItems() then
 			self.mailIndex = 1
 		end

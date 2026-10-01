@@ -2,9 +2,24 @@ local E, L, V, P, G = unpack(ElvUI)
 local UFDP = E:NewModule("Enhanced_DetachedPortrait", "AceHook-3.0")
 local UF = E:GetModule("UnitFrames")
 
+local function PortraitPostUpdate(portrait)
+	local frame = portrait:GetParent()
+	if not frame then return end
+	if not frame.unitframeType then
+		frame = frame:GetParent()
+	end
+	if not frame or not frame.unitframeType then return end
+
+	local db = E.db.enhanced.unitframe.portraitOverlay[frame.unitframeType]
+	if db and frame.USE_PORTRAIT_OVERLAY then
+		portrait:SetAlpha(db.portraitAlpha)
+	end
+end
+
 local function Configure_Portrait(self, frame)
 	if frame.unitframeType == "player" or frame.unitframeType == "target" then
 		local db = E.db.enhanced.unitframe.detachPortrait[frame.unitframeType]
+		local overlayDB = E.db.enhanced.unitframe.portraitOverlay[frame.unitframeType]
 
 		frame.PORTRAIT_DETACHED = frame.USE_PORTRAIT and db.enable and not frame.USE_PORTRAIT_OVERLAY
 		frame.PORTRAIT_WIDTH = (frame.USE_PORTRAIT_OVERLAY or frame.PORTRAIT_DETACHED or not frame.USE_PORTRAIT) and 0 or frame.db.portrait.width
@@ -12,6 +27,9 @@ local function Configure_Portrait(self, frame)
 
 		if frame.USE_PORTRAIT then
 			local portrait = frame.Portrait
+			if not self:IsHooked(portrait, "PostUpdate") then
+				self:SecureHook(portrait, "PostUpdate", PortraitPostUpdate)
+			end
 
 			if frame.PORTRAIT_DETACHED then
 				if not portrait.Holder or (portrait.Holder and not portrait.Holder.mover) then
@@ -46,12 +64,33 @@ local function Configure_Portrait(self, frame)
 
 			self:Configure_HealthBar(frame)
 			self:Configure_Power(frame)
+
+			if frame.USE_PORTRAIT_OVERLAY then
+				portrait:SetAlpha(overlayDB.portraitAlpha)
+				if overlayDB.higherPortrait then
+					if not frame.Health.HigherPortrait then
+						frame.Health.HigherPortrait = CreateFrame("Frame", nil, frame.Health)
+						frame.Health.HigherPortrait:SetAllPoints(frame.Health)
+					end
+					frame.Health.HigherPortrait:SetFrameLevel(frame.Health:GetFrameLevel() + 4)
+					portrait:ClearAllPoints()
+					portrait:SetAllPoints(frame.Health.HigherPortrait)
+					if frame.db.portrait.style == "3D" then
+						portrait:SetFrameLevel(frame.Health.HigherPortrait:GetFrameLevel())
+					end
+				end
+			end
 		end
 	end
 end
 
 function UFDP:ToggleState(unit)
-	if E.db.enhanced.unitframe.detachPortrait.player.enable or E.db.enhanced.unitframe.detachPortrait.target.enable then
+	local playerOverlay = E.db.enhanced.unitframe.portraitOverlay.player
+	local targetOverlay = E.db.enhanced.unitframe.portraitOverlay.target
+	local enabled = E.db.enhanced.unitframe.detachPortrait.player.enable or E.db.enhanced.unitframe.detachPortrait.target.enable
+		or playerOverlay.higherPortrait or targetOverlay.higherPortrait
+		or playerOverlay.portraitAlpha ~= 0.35 or targetOverlay.portraitAlpha ~= 0.35
+	if enabled then
 		if not self:IsHooked(UF, "Configure_Portrait") then
 			self:SecureHook(UF, "Configure_Portrait", Configure_Portrait)
 		end
@@ -67,7 +106,11 @@ end
 
 function UFDP:Initialize()
 	if not E.private.unitframe.enable then return end
-	if not (E.db.enhanced.unitframe.detachPortrait.player.enable or E.db.enhanced.unitframe.detachPortrait.target.enable) then return end
+	local playerOverlay = E.db.enhanced.unitframe.portraitOverlay.player
+	local targetOverlay = E.db.enhanced.unitframe.portraitOverlay.target
+	if not (E.db.enhanced.unitframe.detachPortrait.player.enable or E.db.enhanced.unitframe.detachPortrait.target.enable
+		or playerOverlay.higherPortrait or targetOverlay.higherPortrait
+		or playerOverlay.portraitAlpha ~= 0.35 or targetOverlay.portraitAlpha ~= 0.35) then return end
 
 	self:ToggleState()
 end

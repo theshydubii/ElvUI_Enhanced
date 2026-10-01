@@ -1778,6 +1778,42 @@ end
 
 local function UnitFrameOptions()
 	local TC = E:GetModule("Enhanced_TargetClass")
+	local function PortraitOverlayOptions(unitType)
+		return {
+			order = 4,
+			type = "group",
+			name = L["Portrait Overlay"],
+			get = function(info) return E.db.enhanced.unitframe.portraitOverlay[unitType][info[#info]] end,
+			set = function(info, value)
+				E.db.enhanced.unitframe.portraitOverlay[unitType][info[#info]] = value
+				E:GetModule("Enhanced_DetachedPortrait"):ToggleState(unitType)
+			end,
+			disabled = function()
+				local portrait = E.db.unitframe.units[unitType].portrait
+				return not portrait.enable or not portrait.overlay
+			end,
+			args = {
+				header = {
+					order = 0,
+					type = "header",
+					name = L["Portrait Overlay"]
+				},
+				higherPortrait = {
+					order = 1,
+					type = "toggle",
+					name = L["Higher Overlay Portrait"],
+					desc = L["Keep the portrait visible regardless of health level."]
+				},
+				portraitAlpha = {
+					order = 2,
+					type = "range",
+					name = L["Overlay Portrait Alpha"],
+					isPercent = true,
+					min = 0, max = 1, step = 0.01
+				}
+			}
+		}
+	end
 
 	return {
 		type = "group",
@@ -1837,7 +1873,8 @@ local function UnitFrameOptions()
 								end
 							}
 						}
-					}
+					},
+					overlayPortrait = PortraitOverlayOptions("player")
 				}
 			},
 			player = {
@@ -1893,7 +1930,8 @@ local function UnitFrameOptions()
 								min = 10, max = 600, step = 1
 							}
 						}
-					}
+					},
+					overlayPortrait = PortraitOverlayOptions("target")
 				}
 			},
 			target = {

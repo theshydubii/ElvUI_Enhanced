@@ -760,7 +760,7 @@ end
 ]]
 
 local function GetAverageItemLevel()
-	local items = 16
+	local items = 0
 	local ilvl = 0
 	local colorCount, sumR, sumG, sumB = 0, 0, 0, 0
 
@@ -769,26 +769,24 @@ local function GetAverageItemLevel()
 			local itemLink = GetInventoryItemLink("player", slotID)
 
 			if itemLink then
-				local _, _, quality, itemLevel, _, _, _, _, itemEquipLoc = GetItemInfo(itemLink)
+				local _, _, quality, itemLevel = GetItemInfo(itemLink)
 
-				if itemLevel then
+				if itemLevel and itemLevel > 0 then
 					ilvl = ilvl + itemLevel
+					items = items + 1
 
 					colorCount = colorCount + 1
 					sumR = sumR + qualityColors[quality][1]
 					sumG = sumG + qualityColors[quality][2]
 					sumB = sumB + qualityColors[quality][3]
 
-					if slotID == INVSLOT_MAINHAND and (itemEquipLoc ~= "INVTYPE_2HWEAPON" or titanGrip) then
-						items = 17
-					end
 				end
 			end
 		end
 	end
 
-	if colorCount == 0 then
-		return ilvl / items, 1, 1, 1
+	if items == 0 then
+		return 0, 1, 1, 1
 	else
 		return ilvl / items, (sumR / colorCount), (sumG / colorCount), (sumB / colorCount)
 	end
@@ -805,6 +803,7 @@ end
 
 function module:ItemLevel(statFrame, unit)
 	if not self.Initialized then return end
+	local avgItemLevel, r, g, b = GetAverageItemLevel()
 
 	if GearScore_GetScore then
 		if not self.gearScore or not GS_PlayerIsInCombat then
@@ -824,13 +823,13 @@ function module:ItemLevel(statFrame, unit)
 				self.gearScoreG = g
 				self.gearScoreB = b
 
-				statFrame.Label:SetText(gearScore)
+				statFrame.Label:SetText(format("%d / %.1f", gearScore, avgItemLevel))
 				statFrame.Label:SetTextColor(r, g, b)
 
 				return
 			end
 		else
-			statFrame.Label:SetText(self.gearScore)
+			statFrame.Label:SetText(format("%d / %.1f", self.gearScore, avgItemLevel))
 			statFrame.Label:SetTextColor(self.gearScoreR, self.gearScoreG, self.gearScoreB)
 			return
 		end
@@ -844,7 +843,6 @@ function module:ItemLevel(statFrame, unit)
 --	end
 --	statFrame.Label:SetTextColor(GetItemLevelColor())
 
-	local avgItemLevel, r, g, b = GetAverageItemLevel()
 	statFrame.Label:SetFormattedText("%.1f", avgItemLevel)
 	statFrame.Label:SetTextColor(r, g, b)
 end

@@ -36,7 +36,12 @@ S:AddCallbackForAddon("Blizzard_AchievementUI", "Enhanced_AchievementUI", functi
 		bar:SetValue(0)
 		bar.anim.progress:SetChange(value)
 
-		local r, g, b = E:ColorGradient(value / max, 1, 0, 0, 1, 1, 0, 0, 1, 0)
+		local r, g, b
+		if max == 0 then
+			r, g, b = E:ColorGradient(0, 1, 0, 0, 1, 1, 0, 0, 1, 0)
+		else
+			r, g, b = E:ColorGradient(value / max, 1, 0, 0, 1, 1, 0, 0, 1, 0)
+		end
 		bar.anim.color:Reset()
 		bar.anim.color:SetChange(r, g, b)
 		bar.anim:Play()
@@ -71,11 +76,16 @@ S:AddCallbackForAddon("Blizzard_AchievementUI", "Enhanced_AchievementUI", functi
 	end)
 
 	hooksecurefunc("AchievementFrameComparison_UpdateStatusBars", function(id)
-		local numAchievements, numCompleted = GetCategoryNumAchievements(id)
+		local numAchievements, numCompleted
+		if id == "summary" then
+			numAchievements, numCompleted = GetNumCompletedAchievements()
+		else
+			numAchievements, numCompleted = AchievementFrame_GetCategoryTotalNumAchievements(id, true)
+		end
 		local statusBar = AchievementFrameComparisonSummaryPlayerStatusBar
 		PlayAnimationStatusBar(statusBar, numAchievements, numCompleted)
 
-		local friendCompleted = GetComparisonCategoryNumAchievements(id)
+		local friendCompleted = GetComparisonCategoryNumAchievements(id == "summary" and ACHIEVEMENT_COMPARISON_SUMMARY_ID or id)
 		statusBar = AchievementFrameComparisonSummaryFriendStatusBar
 		PlayAnimationStatusBar(statusBar, numAchievements, friendCompleted)
 	end)
