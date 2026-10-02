@@ -1,16 +1,12 @@
 local E, L, V, P, G = unpack(ElvUI)
 local EFL = E:GetModule("Enhanced_FriendsList")
 
-local function ColorizeSettingName(settingName)
-	return format("|cff1784d1%s|r", settingName)
-end
-
 function EFL:GetOptions()
 	return {
 		order = 3,
 		type = "group",
 		childGroups = "tab",
-		name = ColorizeSettingName(L["Enhanced Friends List"]),
+		name = L["Enhanced Friends List"],
 		args = {
 			header = {
 				order = 1,
