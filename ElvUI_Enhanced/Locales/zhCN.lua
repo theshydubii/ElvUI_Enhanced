@@ -2,7 +2,7 @@ local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, Global
 local L = E.Libs.ACL:NewLocale("ElvUI", "zhCN")
 
 -- DESC locales
-L["ENH_LOGIN_MSG"] = "你正在使用 |cff1784d1ElvUI|r |cff1784d1Enhanced|r |cffff8000(WotLK)|r version %s%s|r。"
+L["ENH_LOGIN_MSG"] = "你正在使用 |cffa855f7ElvUI|r |cffa855f7Enhanced|r |cffff8000(WotLK)|r version %s%s|r。"
 L["DURABILITY_DESC"] = "调整角色界面中装备耐久度信息的设置。"
 L["ITEMLEVEL_DESC"] = "调整角色界面中物品等级信息的设置。"
 L["WATCHFRAME_DESC"] = "根据个人喜好调整任务追踪框架的设置。"

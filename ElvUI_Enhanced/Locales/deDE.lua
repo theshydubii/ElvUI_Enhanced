@@ -2,7 +2,7 @@ local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, Global
 local L = E.Libs.ACL:NewLocale("ElvUI", "deDE")
 
 -- DESC locales
-L["ENH_LOGIN_MSG"] = "Sie verwenden |cff1784d1ElvUI|r |cff1784d1Enhanced|r |cffff8000(WotLK)|r Version %s%s|r."
+L["ENH_LOGIN_MSG"] = "Sie verwenden |cffa855f7ElvUI|r |cffa855f7Enhanced|r |cffff8000(WotLK)|r Version %s%s|r."
 L["DURABILITY_DESC"] = "Passen Sie die Einstellungen für die Haltbarkeit im Charakterfenster an."
 L["ITEMLEVEL_DESC"] = "Passen Sie die Einstellungen für die Anzeige von Gegenstandsstufen im Charakterfenster an."
 L["WATCHFRAME_DESC"] = "Passen Sie die Einstellungen des Watchframe (Questlog) nach ihren Wünschen an."

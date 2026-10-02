@@ -26,7 +26,7 @@ local activeString = format("|cff00ff00%s|r", "Active") -- ACTIVE_PETS doesn't e
 local inactiveString = format("|cffff0000%s|r", FACTION_INACTIVE)
 
 local function ColorizeSettingName(name)
-	return format("|cff1784d1%s|r", name)
+	return format("|cffa855f7%s|r", name)
 end
 
 local function AddTexture(texture)

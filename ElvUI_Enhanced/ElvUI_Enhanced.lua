@@ -56,7 +56,7 @@ local function gsPopupShow()
 end
 
 function addon:ColorizeSettingName(name)
-	return format("|cffff8000%s|r", name)
+	return format("|cffa855f7%s|r", name)
 end
 
 function addon:DBConversions()

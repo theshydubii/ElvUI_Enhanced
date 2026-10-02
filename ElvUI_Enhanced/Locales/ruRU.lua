@@ -2,7 +2,7 @@ local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, Global
 local L = E.Libs.ACL:NewLocale("ElvUI", "ruRU")
 
 -- DESC locales
-L["ENH_LOGIN_MSG"] = "Вы используете |cff1784d1ElvUI|r |cff1784d1Enhanced|r |cffff8000(WotLK)|r версии %s%s|r."
+L["ENH_LOGIN_MSG"] = "Вы используете |cffa855f7ElvUI|r |cffa855f7Enhanced|r |cffff8000(WotLK)|r версии %s%s|r."
 L["DURABILITY_DESC"] = "Настройка параметров информации о прочности предметов в окне персонажа."
 L["ITEMLEVEL_DESC"] = "Настройка параметров информации об уровне предмета в окне персонажа."
 L["WATCHFRAME_DESC"] = "Настройте отображение списка заданий (квест лог) исходя из ваших личных предпочтений."

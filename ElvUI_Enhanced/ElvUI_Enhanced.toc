@@ -1,8 +1,8 @@
 ## Interface: 30300
-## Author: Bunny, Apollyon, Loaal, Crum
-## Version: 1.05
-## Title: |cff1784d1E|r|cffe5e3e3lvUI|r |cff1784d1E|r|cffe5e3e3nhanced|r
-## Notes: Plugin-Enhancements for |cff1784d1E|r|cffe5e3e3lvUI|r.
+## Author: Bunny, Apollyon, Loaal, Crum, theshydubii
+## Version: 1.0
+## Title: |cff6d28d9E|cff7c3aedl|cff8b5cf6v|cffa78bfaU|cffc4b5fdI|r |cffe5e3e3Enhanced|r
+## Notes: Plugin-Enhancements for |cff6d28d9E|cff7c3aedl|cff8b5cf6v|cffa78bfaU|cffc4b5fdI|r.
 ## SavedVariables: EnhancedDB, EnhancedFriendsListDB
 ## RequiredDeps: ElvUI
 ## DefaultState: Enabled
