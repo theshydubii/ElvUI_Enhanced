@@ -2047,7 +2047,7 @@ end
 
 function EE:GetOptions()
 	E.Options.args.enhanced = {
-		order = 20,
+		order = 2,
 		type = "group",
 		childGroups = "tab",
 		name = EE:ColorizeSettingName(L["Enhanced"]),
