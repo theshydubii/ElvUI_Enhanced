@@ -1,6 +1,8 @@
 local E, L, V, P, G = unpack(ElvUI)
 local EE = E:GetModule("ElvUI_Enhanced")
 local EFL = E:GetModule("Enhanced_FriendsList")
+local ISS = E:GetModule("Enhanced_ImprovedSpecSwitch")
+local MB = E:GetModule("Enhanced_MicrobarEnhancement")
 
 local function GeneralOptions()
 	local M = E:GetModule("Enhanced_Misc")
@@ -2062,12 +2064,16 @@ function EE:GetOptions()
 			loseControlGroup = LoseControlOptions(),
 			interruptGroup = InterruptTrackerOptions(),
 			friendsListGroup = EFL:GetOptions(),
+			improvedSpecSwitchGroup = ISS:GetOptions(),
+			microbarEnhancementGroup = MB:GetOptions(),
 		}
 	}
 
 	E.Options.args.enhanced.args.generalGroup.order = 1
 	E.Options.args.enhanced.args.blizzardGroup.order = 2
 	E.Options.args.enhanced.args.friendsListGroup.order = 3
+	E.Options.args.enhanced.args.improvedSpecSwitchGroup.order = 4
+	E.Options.args.enhanced.args.microbarEnhancementGroup.order = 5
 --	E.Options.args.enhanced.args.actionbarGroup.order = 3
 --	E.Options.args.enhanced.args.equipmentInfoGroup.order = 4
 --	E.Options.args.enhanced.args.minimapGroup.order = 5

@@ -40,6 +40,20 @@ P.enhanceFriendsList = {
 	}
 }
 
+P.impss = {
+	switch = false,
+	primary = "none",
+	secondary = "none",
+	hint = true
+}
+
+P.actionbar.microbar.symbolic = false
+P.actionbar.microbar.backdrop = false
+P.actionbar.microbar.backdropSpacing = 2
+P.actionbar.microbar.transparentBackdrop = false
+P.actionbar.microbar.classColor = false
+P.actionbar.microbar.colorS = {r = 1, g = 1, b = 1}
+
 P.enhanced = {
 	general = {
 		pvpAutoRelease = false,
