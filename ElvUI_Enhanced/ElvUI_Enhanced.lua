@@ -198,6 +198,7 @@ function addon:Initialize()
 
 	self:PrintAddonMerged("ElvUI_MinimapButtons")
 	self:PrintAddonMerged("ElvUI_FogofWar")
+	self:PrintAddonMerged("ElvUI_EnhancedFriendsList")
 end
 
 local function InitializeCallback()

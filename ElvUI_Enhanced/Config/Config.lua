@@ -1,5 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI)
 local EE = E:GetModule("ElvUI_Enhanced")
+local EFL = E:GetModule("Enhanced_FriendsList")
 
 local function GeneralOptions()
 	local M = E:GetModule("Enhanced_Misc")
@@ -2060,11 +2061,13 @@ function EE:GetOptions()
 			unitframesGroup = UnitFrameOptions(),
 			loseControlGroup = LoseControlOptions(),
 			interruptGroup = InterruptTrackerOptions(),
+			friendsListGroup = EFL:GetOptions(),
 		}
 	}
 
 	E.Options.args.enhanced.args.generalGroup.order = 1
 	E.Options.args.enhanced.args.blizzardGroup.order = 2
+	E.Options.args.enhanced.args.friendsListGroup.order = 3
 --	E.Options.args.enhanced.args.actionbarGroup.order = 3
 --	E.Options.args.enhanced.args.equipmentInfoGroup.order = 4
 --	E.Options.args.enhanced.args.minimapGroup.order = 5
